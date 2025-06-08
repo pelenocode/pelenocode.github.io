@@ -1,0 +1,499 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 7.3.0">
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha256-dABdfBfUoC8vJUBOwGVdm8L9qlMWaHTIfXt+7GnZCIo=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/pace/1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous" defer></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"pelenocode.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.23.0","exturl":false,"sidebar":{"position":"left","width_expanded":320,"width_dual_column":240,"display":"post","padding":18,"offset":12},"hljswrap":true,"copycode":{"enable":true,"style":"mac"},"fold":{"enable":false,"height":500},"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"duration":200,"transition":{"menu_item":"fadeInDown","post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"},"path":"/search.xml","localsearch":{"enable":true,"top_n_per_article":1,"unescape":false,"preload":false}}</script><script src="/js/config.js" defer></script>
+
+    <meta name="description" content="见惯了市面上各种要付费且不靠谱的文字转语音，不如自己用python写个文字转语音的脚本">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Python+Edge-TTS实现文字转语音功能！傻瓜式教学，有手就行！">
+<meta property="og:url" content="https://pelenocode.github.io/2025/06/08/Python-Edge-TTS%E5%AE%9E%E7%8E%B0%E6%96%87%E5%AD%97%E8%BD%AC%E8%AF%AD%E9%9F%B3%E5%8A%9F%E8%83%BD%EF%BC%81%E5%82%BB%E7%93%9C%E5%BC%8F%E6%95%99%E5%AD%A6%EF%BC%8C%E6%9C%89%E6%89%8B%E5%B0%B1%E8%A1%8C%EF%BC%81/index.html">
+<meta property="og:site_name" content="PeleNoBlog">
+<meta property="og:description" content="见惯了市面上各种要付费且不靠谱的文字转语音，不如自己用python写个文字转语音的脚本">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-08T11:53:40.000Z">
+<meta property="article:modified_time" content="2025-06-08T11:54:53.185Z">
+<meta property="article:author" content="Pele">
+<meta property="article:tag" content="python">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://pelenocode.github.io/2025/06/08/Python-Edge-TTS%E5%AE%9E%E7%8E%B0%E6%96%87%E5%AD%97%E8%BD%AC%E8%AF%AD%E9%9F%B3%E5%8A%9F%E8%83%BD%EF%BC%81%E5%82%BB%E7%93%9C%E5%BC%8F%E6%95%99%E5%AD%A6%EF%BC%8C%E6%9C%89%E6%89%8B%E5%B0%B1%E8%A1%8C%EF%BC%81/">
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://pelenocode.github.io/2025/06/08/Python-Edge-TTS%E5%AE%9E%E7%8E%B0%E6%96%87%E5%AD%97%E8%BD%AC%E8%AF%AD%E9%9F%B3%E5%8A%9F%E8%83%BD%EF%BC%81%E5%82%BB%E7%93%9C%E5%BC%8F%E6%95%99%E5%AD%A6%EF%BC%8C%E6%9C%89%E6%89%8B%E5%B0%B1%E8%A1%8C%EF%BC%81/","path":"2025/06/08/Python-Edge-TTS实现文字转语音功能！傻瓜式教学，有手就行！/","title":"Python+Edge-TTS实现文字转语音功能！傻瓜式教学，有手就行！"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>Python+Edge-TTS实现文字转语音功能！傻瓜式教学，有手就行！ | PeleNoBlog</title>
+  
+
+
+
+
+
+
+
+
+  
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous" defer></script>
+<script src="/js/utils.js" defer></script><script src="/js/motion.js" defer></script><script src="/js/sidebar.js" defer></script><script src="/js/next-boot.js" defer></script>
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/hexo-generator-searchdb/1.4.1/search.js" integrity="sha256-1kfA5uHPf65M5cphT2dvymhkuyHPQp5A53EGZOnOLmc=" crossorigin="anonymous" defer></script>
+<script src="/js/third-party/search/local-search.js" defer></script>
+
+
+
+
+
+  <script src="/js/third-party/pace.js" defer></script>
+
+
+  
+  <script async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <div class="column">
+      <header class="header" itemscope itemtype="http://schema.org/WPHeader"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">PeleNoBlog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger" aria-label="搜索" role="button">
+        <i class="fa fa-search fa-fw fa-lg"></i>
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu"><li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li><li class="menu-item menu-item-about"><a href="/about/" rel="section"><i class="fa fa-user fa-fw"></i>关于</a></li><li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li><li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li><li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li><li class="menu-item menu-item-schedule"><a href="/schedule/" rel="section"><i class="fa fa-calendar fa-fw"></i>日程表</a></li><li class="menu-item menu-item-sitemap"><a href="/sitemap.xml" rel="section"><i class="fa fa-sitemap fa-fw"></i>站点地图</a></li><li class="menu-item menu-item-commonweal"><a href="/404/" rel="section"><i class="fa fa-heartbeat fa-fw"></i>公益 404</a></li>
+      <li class="menu-item menu-item-search">
+        <a role="button" class="popup-trigger"><i class="fa fa-search fa-fw"></i>搜索
+        </a>
+      </li>
+  </ul>
+</nav>
+
+
+
+  <div class="search-pop-overlay">
+    <div class="popup search-popup">
+      <div class="search-header">
+        <span class="search-icon">
+          <i class="fa fa-search"></i>
+        </span>
+        <div class="search-input-container">
+          <input autocomplete="off" autocapitalize="off" maxlength="80"
+                placeholder="搜索..." spellcheck="false"
+                type="search" class="search-input">
+        </div>
+        <span class="popup-btn-close" role="button">
+          <i class="fa fa-times-circle"></i>
+        </span>
+      </div>
+      <div class="search-result-container">
+        <div class="search-result-icon">
+          <i class="fa fa-spinner fa-pulse fa-5x"></i>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</header>
+        
+  
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E8%83%8C%E6%99%AF"><span class="nav-number">1.</span> <span class="nav-text">背景</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%96%B9%E6%A1%88%E4%BB%8B%E7%BB%8D"><span class="nav-number">2.</span> <span class="nav-text">方案介绍</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BC%98%E7%82%B9"><span class="nav-number">2.1.</span> <span class="nav-text">优点</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%BC%BA%E7%82%B9"><span class="nav-number">2.2.</span> <span class="nav-text">缺点</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%AE%9E%E7%8E%B0%E6%B5%81%E7%A8%8B"><span class="nav-number">3.</span> <span class="nav-text">实现流程</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%82%BB%E7%93%9C%E5%BC%8F%E6%B5%8B%E8%AF%95%E7%89%88"><span class="nav-number">3.1.</span> <span class="nav-text">傻瓜式测试版</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%85%B7%E4%BD%93%E6%AD%A5%E9%AA%A4%E5%A6%82%E4%B8%8B"><span class="nav-number">3.1.1.</span> <span class="nav-text">具体步骤如下</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%88%9D%E7%BA%A7%E8%84%9A%E6%9C%AC%E7%89%88"><span class="nav-number">3.2.</span> <span class="nav-text">初级脚本版</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#Python%E8%84%9A%E6%9C%AC"><span class="nav-number">3.2.1.</span> <span class="nav-text">Python脚本</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E4%B8%BA%E4%BB%80%E4%B9%88-Edge-TTS-%E8%A6%81%E7%94%A8%E5%BC%82%E6%AD%A5%EF%BC%9F"><span class="nav-number">3.2.2.</span> <span class="nav-text">为什么 Edge TTS 要用异步？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E8%B0%83%E6%95%B4%E8%AF%AD%E9%80%9F"><span class="nav-number">3.2.3.</span> <span class="nav-text">调整语速</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%89%B9%E9%87%8F%E8%BD%AC%E6%8D%A2%E6%96%87%E6%9C%AC%EF%BC%9F"><span class="nav-number">3.2.4.</span> <span class="nav-text">如何批量转换文本？</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A6%82%E4%BD%95%E6%89%B9%E9%87%8F%E5%90%88%E6%88%90%E8%AF%AD%E9%9F%B3%EF%BC%9F"><span class="nav-number">3.2.5.</span> <span class="nav-text">如何批量合成语音？</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%90%8E%E7%BB%AD%E6%94%B9%E8%BF%9B"><span class="nav-number">3.3.</span> <span class="nav-text">后续改进</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%AE%80%E5%8D%95%E5%9C%BA%E6%99%AF%E7%9A%84%E6%96%87%E5%AD%97%E8%BD%AC%E8%AF%AD%E9%9F%B3%E9%9C%80%E8%A6%81%E6%94%B9%E8%BF%9B%E7%9A%84%E9%83%A8%E5%88%86"><span class="nav-number">3.3.1.</span> <span class="nav-text">简单场景的文字转语音需要改进的部分</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+  <p class="site-author-name" itemprop="name">Pele</p>
+  <div class="site-description" itemprop="description"></div>
+</div>
+<div class="site-state-wrap animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">7</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+  <div class="links-of-author animated">
+      <span class="links-of-author-item">
+        <a href="https://github.com/pelenocode" title="GitHub → https:&#x2F;&#x2F;github.com&#x2F;pelenocode" rel="noopener me" target="_blank"><i class="fab fa-github fa-fw"></i>GitHub</a>
+      </span>
+      <span class="links-of-author-item">
+        <a href="mailto:pelenoiphone@icloud.com" title="E-Mail → mailto:pelenoiphone@icloud.com" rel="noopener me" target="_blank"><i class="fa fa-envelope fa-fw"></i>E-Mail</a>
+      </span>
+  </div>
+  <div class="cc-license animated" itemprop="license">
+    <a href="https://creativecommons.org/licenses/by-nc-sa/4.0/" class="cc-opacity" rel="noopener" target="_blank"><img src="https://cdnjs.cloudflare.com/ajax/libs/creativecommons-vocabulary/2020.11.3/assets/license_badges/small/by_nc_sa.svg" alt="Creative Commons"></a>
+  </div>
+
+        </div>
+      </div>
+    </div>
+
+    
+    <div class="sidebar-inner sidebar-blogroll">
+      <div class="links-of-blogroll animated">
+        <div class="links-of-blogroll-title"><i class="fa fa-globe fa-fw"></i>
+          链接
+        </div>
+        <ul class="links-of-blogroll-list">
+            <li class="links-of-blogroll-item">
+              <a href="https://pelenocode.github.io/" title="https:&#x2F;&#x2F;pelenocode.github.io">Title</a>
+            </li>
+        </ul>
+      </div>
+    </div>
+  </aside>
+
+
+    </div>
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://pelenocode.github.io/2025/06/08/Python-Edge-TTS%E5%AE%9E%E7%8E%B0%E6%96%87%E5%AD%97%E8%BD%AC%E8%AF%AD%E9%9F%B3%E5%8A%9F%E8%83%BD%EF%BC%81%E5%82%BB%E7%93%9C%E5%BC%8F%E6%95%99%E5%AD%A6%EF%BC%8C%E6%9C%89%E6%89%8B%E5%B0%B1%E8%A1%8C%EF%BC%81/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="Pele">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="PeleNoBlog">
+      <meta itemprop="description" content="">
+    </span>
+
+    <span hidden itemprop="post" itemscope itemtype="http://schema.org/CreativeWork">
+      <meta itemprop="name" content="Python+Edge-TTS实现文字转语音功能！傻瓜式教学，有手就行！ | PeleNoBlog">
+      <meta itemprop="description" content="见惯了市面上各种要付费且不靠谱的文字转语音，不如自己用python写个文字转语音的脚本">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          Python+Edge-TTS实现文字转语音功能！傻瓜式教学，有手就行！
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2025-06-08 19:53:40 / 修改时间：19:54:53" itemprop="dateCreated datePublished" datetime="2025-06-08T19:53:40+08:00">2025-06-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%8A%80%E6%9C%AF/" itemprop="url" rel="index"><span itemprop="name">技术</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+            <div class="post-description">见惯了市面上各种要付费且不靠谱的文字转语音，不如自己用python写个文字转语音的脚本</div>
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody"><h1 id="背景"><a href="#背景" class="headerlink" title="背景"></a>背景</h1><p>最近在家想要剪个视频，文本写好，但是缺乏配音，又不想自己上，怎么办呢？用文字转语音软件。浏览器搜索排名靠前的是讯飞，魔方语音。这两家我都用过，效果不错但是要付费。</p>
+<p>因为要做的视频非商用视频，所以就选择自己写脚本文字转语音。</p>
+<h1 id="方案介绍"><a href="#方案介绍" class="headerlink" title="方案介绍"></a>方案介绍</h1><p>使用微软Edge-TTS搭配python实现。完全免费，无需Azure订阅，适合轻量使用。</p>
+<h2 id="优点"><a href="#优点" class="headerlink" title="优点"></a>优点</h2><p>不需要API key，没有字符限制，使用简单，可以通过命令行调用。</p>
+<h2 id="缺点"><a href="#缺点" class="headerlink" title="缺点"></a>缺点</h2><ul>
+<li>依赖edge浏览器</li>
+<li>不可商用</li>
+<li>无法如Azure TTS一样可以精细控制</li>
+</ul>
+<h1 id="实现流程"><a href="#实现流程" class="headerlink" title="实现流程"></a>实现流程</h1><h2 id="傻瓜式测试版"><a href="#傻瓜式测试版" class="headerlink" title="傻瓜式测试版"></a>傻瓜式测试版</h2><p>我们先从最简单的步骤开始，测试最简单的文本，确定方案可用之后再上复杂的脚本。</p>
+<h3 id="具体步骤如下"><a href="#具体步骤如下" class="headerlink" title="具体步骤如下"></a>具体步骤如下</h3><ol>
+<li>下载edge浏览器</li>
+<li>安装Python库</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">pip3 install edge-tts</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>查看支持的语音列表，运行以下命令查看所有语音列表</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">edge-tts --list-voices</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>如果有了目标语音，可以直接使用grep获取语音名称，作者喜欢晓晓的声音，所以测试使用的是晓晓</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">edge-tts --list-voices | grep XiaoxiaoNeural</span><br></pre></td></tr></table></figure>
+
+<ol>
+<li>使用命令行生成语音，测试功能是否正常</li>
+</ol>
+<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">edge-tts --voice zh-CN-XiaoxiaoNeural --text <span class="string">&quot;你好，我是微软晓晓。&quot;</span> --write-media output.mp3</span><br><span class="line"><span class="comment"># --voice：指定语音（比如 `zh-CN-XiaoxiaoNeural`</span></span><br><span class="line"><span class="comment"># --text：要转换的文本</span></span><br><span class="line"><span class="comment"># --write-media：输出音频文件（mp3格式）</span></span><br></pre></td></tr></table></figure>
+
+<h2 id="初级脚本版"><a href="#初级脚本版" class="headerlink" title="初级脚本版"></a>初级脚本版</h2><p>傻瓜式测试之后，发现功能可用。我们就可以写脚本了。</p>
+<h3 id="Python脚本"><a href="#Python脚本" class="headerlink" title="Python脚本"></a>Python脚本</h3><p>初级脚本如下：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> asyncio</span><br><span class="line"><span class="keyword">import</span> edge_tts</span><br><span class="line"></span><br><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">generate_speech</span>(<span class="params">text, output_file</span>):</span><br><span class="line">    voice = <span class="string">&quot;zh-CN-XiaoxiaoNeural&quot;</span>  <span class="comment"># 使用晓晓语音</span></span><br><span class="line">    communicate = edge_tts.Communicate(text=text, voice=voice)</span><br><span class="line">    <span class="keyword">await</span> communicate.save(output_file)</span><br><span class="line"></span><br><span class="line"><span class="comment"># 调用示例</span></span><br><span class="line">asyncio.run(generate_speech(<span class="string">&quot;你好，欢迎使用Edge TTS。&quot;</span>, <span class="string">&quot;output.mp3&quot;</span>))</span><br></pre></td></tr></table></figure>
+
+<p>脚本讲解</p>
+<ul>
+<li>asyncio是python的异步IO库，涉及网络请求文件读写等需要等待的操作时，程序在等待的时候可以做其他事情<ul>
+<li>核心概念<ul>
+<li>async&#x2F;await来定义异步函数和等待异步操作</li>
+<li>事件循环：驱动异步任务的引擎</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>代码解析<ul>
+<li><p>我们定义了一个异步函数，使用async def来声明这个函数是异步函数。</p>
+</li>
+<li><p>这个函数的参数是</p>
+<ul>
+<li>text：需要语音转文字的文本</li>
+<li>output_file：保存的文件名</li>
+</ul>
+</li>
+<li><p>设置语音合成器</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">voice = <span class="string">&quot;zh-CN-XiaoxiaoNeural&quot;</span>  <span class="comment"># 使用晓晓语音</span></span><br><span class="line">communicate = edge_tts.Communicate(text=text, voice=voice)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>edge_tts.Comunicate()可以创建一个语音合成任务</li>
+<li>这一步不会立刻请求，而是返回一个协程对象（Coroutine）</li>
+</ul>
+</li>
+<li><p>保存语音文件</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">await</span> communicate.save(output_file)</span><br></pre></td></tr></table></figure>
+<ul>
+<li>await等待异步操作完成，会真正触发语音合成，并且保存文件<ul>
+<li>程序在此处会暂停，直到save完成，但是不会阻塞整个线程</li>
+<li>如果合成成功，语音会保存到output_file</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><p>调用异步函数</p>
+  <figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">asyncio.run(generate_speech(<span class="string">&quot;你好，欢迎使用Edge TTS。&quot;</span>, <span class="string">&quot;output.mp3&quot;</span>))</span><br></pre></td></tr></table></figure>
+<ul>
+<li>asyncio.run()启动事件循环并且运行异步函数<ul>
+<li>它是异步程序的入口</li>
+<li>执行完毕之后自动关闭事件循环</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h3 id="为什么-Edge-TTS-要用异步？"><a href="#为什么-Edge-TTS-要用异步？" class="headerlink" title="为什么 Edge TTS 要用异步？"></a><strong>为什么 Edge TTS 要用异步？</strong></h3><p>因为语音合成需要：</p>
+<ol>
+<li><p>向微软服务器发送请求（网络 I&#x2F;O）。</p>
+</li>
+<li><p>接收音频流并保存（文件 I&#x2F;O）。</p>
+<p> 这些操作都是 <strong>耗时任务</strong>，用异步可以避免阻塞主程序。</p>
+</li>
+</ol>
+<h3 id="调整语速"><a href="#调整语速" class="headerlink" title="调整语速"></a>调整语速</h3><p>Edge TTS 默认不支持直接调整语速，但可以通过 <strong>SSML（语音标记语言）</strong> 实现：</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">text = <span class="string">&quot;&quot;&quot;</span></span><br><span class="line"><span class="string">&lt;speak version=&quot;1.0&quot; xmlns=&quot;http://www.w3.org/2001/10/synthesis&quot; xml:lang=&quot;zh-CN&quot;&gt;</span></span><br><span class="line"><span class="string">    &lt;prosody rate=&quot;fast&quot;&gt;这句话会说得更快。&lt;/prosody&gt;</span></span><br><span class="line"><span class="string">    &lt;prosody rate=&quot;slow&quot;&gt;这句话会说得更慢。&lt;/prosody&gt;</span></span><br><span class="line"><span class="string">&lt;/speak&gt;</span></span><br><span class="line"><span class="string">&quot;&quot;&quot;</span></span><br><span class="line">asyncio.run(generate_speech(text, <span class="string">&quot;output_with_speed.mp3&quot;</span>))</span><br></pre></td></tr></table></figure>
+
+<p>注： <code>rate=&quot;fast&quot;</code> &#x2F; <code>rate=&quot;slow&quot;</code>：调整语速（可选 <code>x-slow</code>, <code>slow</code>, <code>medium</code>, <code>fast</code>, <code>x-fast</code>）。</p>
+<h3 id="如何批量转换文本？"><a href="#如何批量转换文本？" class="headerlink" title="如何批量转换文本？"></a>如何批量转换文本？</h3><p>使用Python脚本循环处理多个文本</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">texts = [<span class="string">&quot;第一段话&quot;</span>, <span class="string">&quot;第二段话&quot;</span>, <span class="string">&quot;第三段话&quot;</span>]</span><br><span class="line"><span class="keyword">for</span> i, text <span class="keyword">in</span> <span class="built_in">enumerate</span>(texts):</span><br><span class="line">    asyncio.run(generate_speech(text, <span class="string">f&quot;output_<span class="subst">&#123;i&#125;</span>.mp3&quot;</span>))</span><br></pre></td></tr></table></figure>
+
+<h3 id="如何批量合成语音？"><a href="#如何批量合成语音？" class="headerlink" title="如何批量合成语音？"></a>如何批量合成语音？</h3><figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">async</span> <span class="keyword">def</span> <span class="title function_">batch_convert</span>(<span class="params">texts</span>):</span><br><span class="line">    tasks = []</span><br><span class="line">    <span class="keyword">for</span> i, text <span class="keyword">in</span> <span class="built_in">enumerate</span>(texts):</span><br><span class="line">        task = generate_speech(text, <span class="string">f&quot;output_<span class="subst">&#123;i&#125;</span>.mp3&quot;</span>)</span><br><span class="line">        tasks.append(task)</span><br><span class="line">    <span class="keyword">await</span> asyncio.gather(*tasks)  <span class="comment"># 并行执行所有任务</span></span><br><span class="line"></span><br><span class="line">texts = [<span class="string">&quot;语音1&quot;</span>, <span class="string">&quot;语音2&quot;</span>, <span class="string">&quot;语音3&quot;</span>]</span><br><span class="line">asyncio.run(batch_convert(texts))</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">asyncio.gather()</span><br></pre></td></tr></table></figure>
+
+<p>会同时运行多个异步任务，比顺序执行快得多！</p>
+<h2 id="后续改进"><a href="#后续改进" class="headerlink" title="后续改进"></a>后续改进</h2><p>我目前用到的功能是20秒的文本转语音，所以用不到长文本OR批量文本转语音，所以该脚本目前基本可以满足我的需要。</p>
+<h3 id="简单场景的文字转语音需要改进的部分"><a href="#简单场景的文字转语音需要改进的部分" class="headerlink" title="简单场景的文字转语音需要改进的部分"></a>简单场景的文字转语音需要改进的部分</h3><ul>
+<li><input disabled="" type="checkbox"> 添加读取文本的功能，从指定文件读取文本内容</li>
+<li><input disabled="" type="checkbox"> 读取文本之后，切分文本的第一行为标题，剩余文本为语音转文字的内容</li>
+<li><input disabled="" type="checkbox"> 保存文件的时候询问用户保存到哪个目录，否则保存到默认目录</li>
+<li><input disabled="" type="checkbox"> 文本文件可以包含目录行，读取文本的时候切分到这一行，文本生成的时候，自动保存到该目录，如果为空，则保存到默认目录</li>
+<li><input disabled="" type="checkbox"> 批量读取文件功能</li>
+<li><input disabled="" type="checkbox"> 批量生成语音功能</li>
+<li><input disabled="" type="checkbox"> 制作GUI界面</li>
+<li><input disabled="" type="checkbox"> 本机上写简单的bash脚本，从读取文本到合成语音，到保存文件。</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/python/" rel="tag"><i class="fa fa-tag"></i> python</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2025/06/02/VPN%E8%B8%A9%E5%9D%91%E6%8C%87%E5%8D%97%EF%BC%9A%E6%88%91%E6%98%AF%E6%80%8E%E4%B9%88%E4%BB%8E%E4%B8%8D%E7%9F%A5%E9%81%93%E9%98%B2%E7%81%AB%E9%95%BF%E5%9F%8E%E7%9A%84%E5%AD%98%E5%9C%A8%E5%88%B0%E7%86%9F%E7%BB%83%E4%BD%BF%E7%94%A8VPN%E7%9A%84%EF%BC%9F/" rel="prev" title="VPN踩坑指南：我是怎么从不知道防火长城的存在到熟练使用VPN的？">
+                  <i class="fa fa-angle-left"></i> VPN踩坑指南：我是怎么从不知道防火长城的存在到熟练使用VPN的？
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+  <div class="copyright">
+    &copy; 
+    <span itemprop="copyrightYear">2025</span>
+    <span class="with-love">
+      <i class="fa fa-heart"></i>
+    </span>
+    <span class="author" itemprop="copyrightHolder">Pele</span>
+  </div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+
+    </div>
+  </footer>
+
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+  <div class="sidebar-dimmer"></div>
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up fa-lg"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+</body>
+</html>
